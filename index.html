@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  <script src="/assets/script/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- and it's easy to individually load additional languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css" />
+  <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+  <style>
+    .hljs {
+      display: block;
+      padding: 10px 10px;
+      border: solid 1px gray;
+    }
+
+    .bi {
+      color: yellow;
+    }
+
+    code {
+      color: orangered;
+    }
+  </style>
+  <script>
+    let documentation;
+    fetch("docs.json").then(response => response.json()).then(res => {
+      hljs.addPlugin(new CopyButtonPlugin());
+      $(".navbar-nav").html(res.docs.map(x => `<a class="nav-link" href="#${x.name}v${x.version}/">${x.name} ${x.version.replace(/(\d+)\.(\d+)\.\d+/gm, "v$1.$2")}</a>`).join(""))
+      documentation = res
+    })
+
+    $(document).on("click", "a", function() {
+      let path = $(this).attr('href');
+      if (!path) return;
+      path = path.replace("#", "/")
+      return pathManager(path)
+    })
+
+    function pathManager(path) {
+      switch (true) {
+        case /\/(.*?)v(.*?)\//.test(path):
+          const regex = new RegExp('\\\/(.*?)v(.*?)\\\/', 'gm');
+          let params = {};
+          while ((match = regex.exec(path)) !== null) {
+            params.module = match[1];
+            params.version = match[2];
+          }
+
+          let data = documentation.docs.find(x => x.name === params.module && x.version === params.version);
+          $("#content").html(`
+      <div class="container mt-3">
+        <h1>${data.name}</h1>
+        <p>${data.description}</p>
+      </div>` + (data.subDocs ? `<div class="container">` + data.subDocs.map(x => {
+              switch (x.type) {
+                case "text":
+                  return `<p>${x.value}</p>`
+                  break;
+                case "codeblock":
+                  return `<pre><code class="language-${x.language}">${x.value}</code></pre>`
+                  break;
+              }
+            }).join("") + "</div>" : "") +
+            data.docs.map(x => `
+      <div class="container mt-3">
+        <h3>${x.type == "Class" ? `<i class="bi bi-archive-fill fs-6"></i>` : `<i class="bi bi-book-fill fs-6"></i>`} ${x.name}</h3>
+        ${x.params ? `<ul>${x.params.map(par => `<li>${par.name} <code>${par.type.replace("<", "&lt;").replace(">", "&gt;")}</code>${par.required ? " | <b>Required</b>" : " | <b>Optional</b>" }</li>`).join(", ")}</ul>` : ""}
+        ${x.description ? `<p>${x.description}</p>` : ""}
+        ${x.examples ? x.examples.map(ex => `
+        ${ex.description ? "<p>" + ex.description + "</p>" : ""}
+        ${`<pre><code class="language-javascript">${ex.code}</code></pre>`}
+        ${ex.alert ? `<div class="card m-3 bg-secondary text-white">
+        <div class="card-header">Note</div>
+        <div class="card-body">
+          ${ex.alert}</div>
+        </div>` : ""}
+        `).join("") : ""}
+        <h4>Attribute</h4>
+        <ul>
+          ${x.object.map(obj => `<li>${obj.name} <code>${obj.type.replace("<", "&lt;").replace(">", "&gt;")}</code></li>`).join("")}
+        </ul>
+        ${x.object ? x.object.map(obj => `
+        <div class="card m-1 bg-warning text-black">
+          <div class="card-body">
+            <h6 class="card-title">${obj.name}${obj.type.replace("<", "&lt;").replace(">", "&gt;") == "method" ? "()" : ""}</h6>
+            ${obj.description ? `<div class="card-text fs-6">${obj.description}</div>` : ""}
+            ${obj.params ? `<ul>${obj.params.map(par => `<li>${par.name} <code>${par.type.replace("<", "&lt;").replace(">", "&gt;")}</code>${par.required ? " | <b>Required</b>" : " | <b>Optional</b>" }</li>`).join("")}</ul>` : ""}
+            ${obj.code ? `<pre><code class="language-javascript">${obj.code}</code></pre>` : ""}
+          </div>
+        </div>`).join("") : ""}
+      </div>`).join("")
+          );
+          hljs.highlightAll();
+          break;
+        default:
+
+          break;
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-dark text-white">
+  <nav class="navbar navbar-expand-lg navbar-warning bg-warning sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand">Lumine</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+        </div>
+        <select class="form-select form-select-m mb-3 bg-dark text-white" aria-label="Large select example">
+          <option selected>main</option>
+          <option value="1">voice</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+  <div id="content"></div>
+
+  </div>
+</body>
+
+  </html>
