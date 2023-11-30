@@ -1,0 +1,182 @@
+{
+  "name": "Lumine.js",
+  "developer": "Kanaka Nakazawa",
+  "description": "Lumine.js",
+  "docs": [
+    {
+      "name": "lumined.js",
+      "description": "Hello this is the documentation for lumine Discord",
+      "version": "1.0.0",
+      "subDocs":[
+        {
+          "type": "text",
+          "value": "Installation method, you can use <code>npm</code> like:"
+        },
+        {
+          "type": "codeblock",
+          "language": "shell",
+          "value": "npm i Lumine-js/lumined.js"
+        }
+        ],
+      "docs": [
+        {
+          "name": "Client",
+          "description": "",
+          "type":"Class",
+          "params":[{"name":"clientObject", "type":"Object<ClientDiscord>"}],
+          "examples": [{
+              "description": "You can make bot use this example",
+              "code": "const bot = new Client();\nbot.login(token) //Paste your token",
+              "alert": "If you don't add the <code>token</code> in the <code>Client()</code>, you can use <code>login(token)</code>"
+          },
+            {
+              "description": "Alternatively, you can put the token into the client in this way:",
+              "code": "const bot = new Client({\n  token: \"place your token here\"\n});\nbot.login()",
+              "alert": "You don't need to put the <code>token</code> in <code>login(token)</code>"
+          }],
+          "object": [
+            {
+              "name": "login",
+              "description": "Test",
+              "type": "Method",
+              "params": [
+                {
+                  "name": "token",
+                  "description": "",
+                  "type": "String",
+                  "required": false
+                }
+                ]
+            }
+            ]
+        },
+        {
+          "name": "Embed",
+          "description": "You want make embed? use this builder, Optional if you want to create an embed but are afraid of forgetting some important things",
+          "type": "Class",
+          "examples": [{
+              "description": "Simple embed",
+              "code": "const bot = new Embed()\n.setTitle(\"Embed Title\")\n.setDescription(\"You can make description anything\")",
+              "alert": ""
+          }],
+          "object": [
+            {
+              "name": "setTitle",
+              "description": "Make embed title",
+              "type": "Method",
+              "params": [
+                {
+                  "name": "title",
+                  "description": "",
+                  "type": "String",
+                  "required": true
+                }
+                ]
+            },
+            {
+              "name": "setDescription",
+              "description": "Make embed description",
+              "type": "Method",
+              "params": [
+                {
+                  "name": "description",
+                  "description": "",
+                  "type": "String",
+                  "required": true
+                }
+                ]
+            },
+            {
+              "name": "setFooter",
+              "description": "Make embed description",
+              "type": "Method",
+              "params": [
+                {
+                  "name": "footer",
+                  "description": "",
+                  "type": "Object<FooterObject>",
+                  "required": true
+                            }
+              ]
+            }
+            ]
+        }
+        ]
+    },
+    {
+      "name": "lumineg.js",
+      "description": "Hello this is the documentation for lumine Guilded",
+      "version": "1.0.0",
+      "docs": [
+        {
+          "name": "Client",
+          "description": "",
+          "type": "Class",
+          "examples": [{
+              "description": "You can make bot use this example",
+              "code": "const bot = new Client();\nbot.login(token) //Paste your token",
+              "alert": "If you don't add the <code>token</code> in the <code>Client()</code>, you can use <code>login(token)</code>"
+          },
+            {
+              "description": "Alternatively, you can put the token into the client in this way:",
+              "code": "const bot = new Client({\n  token: \"place your token here\"\n});\nbot.login()",
+              "alert": "You don't need to put the <code>token</code> in <code>login(token)</code>"
+          }],
+          "object": [
+            {
+              "name": "login",
+              "description": "Test",
+              "type": "Method",
+              "params": [
+                {
+                  "name": "token",
+                  "description": "",
+                  "type": "String",
+                  "required": false
+                }
+                ]
+            }
+            ]
+        }
+
+        ]
+    },
+    {
+      "name": "luminer.js",
+      "description": "Hello this is the documentation for lumine Revolt",
+      "version": "1.0.0",
+      "docs": [
+        {
+          "name": "Client",
+          "description": "",
+          "type":"Class",
+          "examples": [{
+              "description": "You can make bot use this example",
+              "code": "const bot = new Client();\nbot.login(token) //Paste your token",
+              "alert": "If you don't add the <code>token</code> in the <code>Client()</code>, you can use <code>login(token)</code>"
+          },
+            {
+              "description": "Alternatively, you can put the token into the client in this way:",
+              "code": "const bot = new Client({\n  token: \"place your token here\"\n});\nbot.login()",
+              "alert": "You don't need to put the <code>token</code> in <code>login(token)</code>"
+          }],
+          "object": [
+            {
+              "name": "login",
+              "description": "Test",
+              "type": "Method",
+              "params": [
+                {
+                  "name": "token",
+                  "description": "",
+                  "type": "String",
+                  "required": false
+                }
+                ]
+            }
+            ]
+        }
+        ]
+    }
+    ]
+}
