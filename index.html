@@ -37,15 +37,14 @@
       hljs.addPlugin(new CopyButtonPlugin());
       $(".navbar-nav").html(res.docs.map(x => `<a class="nav-link" href="#${x.name}v${x.version}/">${x.name} ${x.version.replace(/(\d+)\.(\d+)\.\d+/gm, "v$1.$2")}</a>`).join(""))
       documentation = res
+      handleHashChange();
     })
 
     function handleHashChange() {
       var currentHash = window.location.hash;
       pathManager(currentHash)
-      console.log("Halaman saat ini:", currentHash);
-    } 
+    }
     window.addEventListener("hashchange", handleHashChange);
-    handleHashChange();
 
     $(document).on("click", "a", function() {
       let path = $(this).attr('href');
